@@ -1,0 +1,173 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Container chính, đảm bảo font chữ không bị ảnh hưởng bởi trang web gốc */
+.naver-extension-container {
+  font-family: sans-serif;
+  color: #333;
+}
+
+/* 1. Nút nổi góc trái trên */
+.floating-trigger {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 99999; /* Rất cao để đè lên mọi thứ */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 24px;
+  transition: transform 0.2s;
+}
+
+.floating-trigger:hover {
+  transform: scale(1.1);
+}
+
+/* 2. Màn hình đen mờ (Overlay) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Màu đen mờ */
+  z-index: 99998; /* Thấp hơn nút trigger 1 chút */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 3. Hộp Dialog chính */
+.dialog-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  min-height: 200px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Style cho các thành phần bên trong */
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box; /* Quan trọng để không bị vỡ layout */
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 10px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Grid cho 4 nút menu */
+.grid-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.grid-buttons button {
+  padding: 15px;
+  background: #f3f4f6;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.grid-buttons button:hover {
+  background: #e5e7eb;
+}
+
+.btn-logout {
+  grid-column: span 2; /* Nút logout dài hết dòng */
+  background-color: #fee2e2 !important;
+  color: #dc2626;
+}
+
+/* Style cho Header của các màn hình con */
+.feature-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

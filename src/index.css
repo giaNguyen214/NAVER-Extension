@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset CSS riêng cho Extension để không bị ảnh hưởng bởi trang web */
+:host {
+  all: initial; /* Reset tất cả về mặc định */
+  font-family: sans-serif;
+  line-height: 1.5;
+}

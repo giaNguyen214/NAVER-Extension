@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "NAVER Extension",
+  "version": "1.0",
+  "description": "React Vite Extension",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["assets/content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
