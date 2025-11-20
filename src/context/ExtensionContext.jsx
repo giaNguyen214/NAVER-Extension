@@ -72,7 +72,7 @@ export const ExtensionProvider = ({ children }) => {
       link.href = url;
       link.download = `scraped_debug_${Date.now()}.txt`; // Tên file có timestamp
       document.body.appendChild(link);
-      link.click();
+      // link.click();
       document.body.removeChild(link);
       console.log("✅ Đã tải file debug về máy!");
     } catch (e) {

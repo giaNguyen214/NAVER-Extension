@@ -14,6 +14,8 @@ export default function Dashboard() {
 
   // --- HÀM TẮT EXTENSION ---
   const handleTurnOff = () => {
+    // chrome.storage.local.set({ naverExtensionDisabled: true });
+
     // Lấy đúng cái ID mà bạn đã định nghĩa trong file main/content
     const rootElement = document.getElementById("naver-extension-root");
 
