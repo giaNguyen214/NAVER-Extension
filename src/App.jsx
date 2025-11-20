@@ -120,9 +120,9 @@ function App() {
               className="w-full max-w-sm !rounded-xl shadow-2xl relative animate-slide-up max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <CardContent className="!p-6">
+              <div className="w-full">
                 <MainContent />
-              </CardContent>
+              </div>
             </div>
           </div>
         )}

@@ -11,19 +11,19 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full max-w-[350px] mx-auto overflow-hidden">
+    <div className="w-full mx-auto overflow-hidden">
       <GlassCard cornerRadius={25}>
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col items-center gap-6 text-center w-full"
+          className="flex flex-col items-center gap-6 text-center w-full p-6 box-border"
         >
           {/* --- HEADER --- */}{" "}
           <div className="space-y-2">
             {/* Chữ màu đen theo yêu cầu */}{" "}
-            <h3 className="text-3xl font-white text-black tracking-tight drop-shadow-sm">
+            <h3 className="text-3xl text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] tracking-tight">
               Welcome Back{" "}
             </h3>{" "}
-            <p className="text-xs font-bold text-white/70 uppercase tracking-widest">
+            <p className="text-sm font-bold text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] uppercase tracking-widest">
               Naver Extension AI{" "}
             </p>{" "}
           </div>
