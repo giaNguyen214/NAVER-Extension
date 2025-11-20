@@ -27,7 +27,13 @@ const AVAILABLE_SOURCES = [
 ];
 
 export default function SourceSelect() {
-  const { selectedSources, setSelectedSources, navigate } = useExtension();
+  const {
+    selectedSources,
+    setSelectedSources,
+    navigate,
+    setAnalysisLogs,
+    selectedText,
+  } = useExtension();
 
   const toggleSource = (fileName) => {
     if (selectedSources.includes(fileName)) {
@@ -44,34 +50,59 @@ export default function SourceSelect() {
   const handleBack = () => navigate("menu");
 
   // --- MOCK API FUNCTION ---
+  // --- MOCK API FUNCTION (đã sửa theo mockLogs) ---
   const mockVerifyText = (text, sourceIds) => {
     return new Promise((resolve) => {
       console.log("Đang gửi API...", { text, sourceIds });
 
       setTimeout(() => {
-        // Giả lập kết quả trả về từ Server
-        const mockResult = {
-          status: "conflict", // 'verified', 'conflict', 'unknown'
-          confidence_score: 0.88,
-          summary: "Phát hiện mâu thuẫn giữa nội dung bôi đen và tài liệu gốc.",
-          details: [
-            {
-              source: "article_1.pdf",
-              quote: "Doanh thu quý 1 tăng 20% so với cùng kỳ.",
-              analysis:
-                "Nội dung bạn chọn nói là 'giảm 10%', trái ngược với tài liệu.",
-              type: "danger", // Dùng để tô màu đỏ
-            },
-            {
-              source: "report_final.docx",
-              quote: "Kế hoạch mở rộng bị hoãn lại.",
-              analysis: "Khớp với thông tin trong báo cáo.",
-              type: "success", // Dùng để tô màu xanh
-            },
-          ],
-        };
+        const mockResult = [
+          {
+            id: 1,
+            type: "success",
+            title: "Content verified successfully.",
+            summary: `Đoạn văn bạn chọn đã được xác minh: "${text}"`,
+          },
+          {
+            id: 2,
+            type: "error",
+            title: "Conflicting information detected.",
+            summary: "Phát hiện mâu thuẫn giữa nội dung chọn và tài liệu gốc.",
+            details: [
+              {
+                source: "article_1.pdf",
+                content:
+                  "Tài liệu gốc: 'Doanh thu quý 1 tăng 20%'. Nội dung chọn: 'giảm 10%'.",
+              },
+              {
+                source: "report_final.docx",
+                content:
+                  "Một số thông tin trùng khớp, một số khác chưa nhất quán.",
+              },
+            ],
+          },
+          {
+            id: 3,
+            type: "error",
+            title: "Source mismatch found",
+            summary: "Một số dữ liệu không khớp với báo cáo cuối cùng.",
+            details: [
+              {
+                source: "Financial_Report_Q3.pdf",
+                content: "Báo cáo gốc: Doanh thu thực tế 4.2 tỷ.",
+              },
+            ],
+          },
+          {
+            id: 4,
+            type: "success",
+            title: "Citation Check Passed",
+            summary: "Tất cả trích dẫn đều hợp lệ.",
+          },
+        ];
+
         resolve(mockResult);
-      }, 2000); // Giả lập delay 2s
+      }, 2000);
     });
   };
 
@@ -106,12 +137,14 @@ export default function SourceSelect() {
       // 3. Xử lý kết quả và chuyển trang
       console.log("Kết quả API:", data);
 
+      setAnalysisLogs((prev) => [...(data.logs || data), ...prev]);
+
       // Nếu bạn muốn truyền kết quả này sang trang "verify"
       // Bạn cần sửa navigate để nhận state (nếu router hỗ trợ) hoặc lưu vào Context
       // Ví dụ lưu vào context trước khi chuyển trang:
       // setVerificationResult(data);
 
-      navigate("verify");
+      // navigate("verify");
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
       alert("Có lỗi xảy ra khi gửi dữ liệu.");

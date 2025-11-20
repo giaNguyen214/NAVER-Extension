@@ -11,6 +11,8 @@ export const ExtensionProvider = ({ children }) => {
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedText, setSelectedText] = useState("");
 
+  const [analysisLogs, setAnalysisLogs] = useState([]);
+
   // Data Flow
   const [availableSources, setAvailableSources] = useState([]); // List source từ API về
   const [selectedSourceIds, setSelectedSourceIds] = useState([]); // User chọn cái nào
@@ -114,6 +116,9 @@ export const ExtensionProvider = ({ children }) => {
         setSelectedSources,
         selectedText,
         setSelectedText,
+
+        analysisLogs,
+        setAnalysisLogs,
       }}
     >
       {children}
