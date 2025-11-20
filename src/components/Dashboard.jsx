@@ -14,7 +14,7 @@ export default function Dashboard() {
 
   // --- HÀM TẮT EXTENSION ---
   const handleTurnOff = () => {
-    // chrome.storage.local.set({ naverExtensionDisabled: true });
+    chrome.storage.local.set({ naverExtensionDisabled: true });
 
     // Lấy đúng cái ID mà bạn đã định nghĩa trong file main/content
     const rootElement = document.getElementById("naver-extension-root");
@@ -29,7 +29,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="w-full mx-auto overflow-hidden">
+    <div className="w-full mx-auto overflow-hidden rounded-[25px]">
       <GlassCard cornerRadius={25}>
         <div className="flex flex-col items-center text-center w-full gap-5 p-10 box-border rounded-[25px]">
           <Typography

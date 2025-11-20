@@ -19,5 +19,6 @@
     "service_worker": "assets/background.js",
     "type": "module"
   },
-  "action": {}
+  "action": {},
+  "permissions": ["storage", "activeTab", "scripting"]
 }

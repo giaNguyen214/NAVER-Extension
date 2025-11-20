@@ -42,27 +42,28 @@ function App() {
         {/* Floating Trigger Button */}
         <div className="fixed top-5 right-5 z-[2147483647]">
           <motion.div
-            // Chỉ giữ lại hiệu ứng nhấn
             whileTap={{ scale: 0.9 }}
-            // 1. SỬA initial: x dương lớn để nó bắt đầu từ ngoài màn hình bên phải
+            // Giữ nguyên hiệu ứng xuất hiện từ bên phải
             initial={{ x: 100, y: -60, opacity: 0 }}
-            // Trạng thái đích: Hiện ra và chạy hiệu ứng Border (Blob)
             animate={{
-              // 2. SỬA animate x: Chạy từ ngoài vào (-60), rồi vòng về sát mép phải (0)
               x: [-60, 0],
               y: [60, 0],
               opacity: 1,
 
-              // Giữ nguyên hiệu ứng border
-              borderRadius: [
-                "70% 30% 80% 20% / 60% 40% 70% 30%",
-                "35% 65% 25% 75% / 65% 35% 75% 25%",
-                "80% 20% 60% 40% / 55% 75% 25% 45%",
-                "60% 40% 70% 30% / 50% 60% 40% 50%",
-              ],
-              scale: [0.96, 1.06, 1],
+              // // Hiệu ứng nhẹ, mượt, GPU-friendly
+              // scale: [1, 1.04, 1],
+              // borderRadius: [
+              //   "48% 52% 50% 50% / 50% 48% 52% 50%",
+              //   "52% 48% 49% 51% / 49% 51% 48% 52%",
+              //   "48% 52% 50% 50% / 50% 48% 52% 50%",
+              // ],
+
+              // boxShadow: [
+              //   "0 0 8px rgba(255,255,255,0.15)",
+              //   "0 0 15px rgba(255,255,255,0.35)",
+              //   "0 0 8px rgba(255,255,255,0.15)",
+              // ],
             }}
-            // Cấu hình chuyển động riêng biệt (GIỮ NGUYÊN)
             transition={{
               x: {
                 duration: 3,
@@ -75,14 +76,16 @@ function App() {
                 ease: "easeInOut",
               },
               opacity: { duration: 1 },
-              borderRadius: {
-                duration: 7,
+
+              // Hiệu ứng glow + scale nhẹ, chạy vô hạn nhưng cực nhẹ CPU
+              boxShadow: {
+                duration: 4,
                 ease: "easeInOut",
                 repeat: Infinity,
                 repeatType: "mirror",
               },
               scale: {
-                duration: 7,
+                duration: 4,
                 ease: "easeInOut",
                 repeat: Infinity,
                 repeatType: "mirror",
@@ -91,10 +94,11 @@ function App() {
             style={{
               position: "absolute",
               top: 0,
-              right: 0, // Vẫn là right: 0
+              right: 0,
               zIndex: 10,
               overflow: "hidden",
               cursor: "pointer",
+              borderRadius: "52% 48% 55% 45% / 48% 55% 45% 52%",
             }}
           >
             <GlassCard onClick={() => setIsOpen(!isOpen)} cornerRadius={100}>
@@ -117,11 +121,32 @@ function App() {
             onClick={() => setIsOpen(false)}
           >
             <div
-              className="w-full max-w-sm !rounded-xl shadow-2xl relative animate-slide-up max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-sm !rounded-xl shadow-2xl relative animate-slide-up max-h-[90vh] overflow-visible"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="w-full">
-                <MainContent />
+                <motion.div
+                  className="w-full"
+                  initial={{ x: "-50%", y: "-50%", opacity: 0, scale: 0.9 }}
+                  animate={{ x: "-50%", y: "-50%", opacity: 1, scale: 1 }}
+                  drag
+                  dragMomentum={false} // ⛔ tắt trôi inertia
+                  dragElastic={0.2} // ⛔ không bị kéo giãn
+                  style={{
+                    width: "100%",
+                    maxWidth: "400px", // ⭐ chống bị thu nhỏ
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    backgroundColor: "transparent",
+                    // transform: "translate(-50%, -50%)",
+                    cursor: "grab", // ⭐ báo có thể kéo
+                    borderRadius: "25px",
+                  }}
+                  whileTap={{ cursor: "grabbing" }} // ⭐ khi đang kéo
+                >
+                  <MainContent />
+                </motion.div>
               </div>
             </div>
           </div>

@@ -11,8 +11,8 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full mx-auto overflow-hidden">
-      <GlassCard cornerRadius={25}>
+    <div className="w-full mx-auto overflow-hidden rounded-[25px]">
+      <GlassCard cornerRadius={25} style={{ width: "100%", padding: "15px" }}>
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-center gap-6 text-center w-full p-6 box-border"
