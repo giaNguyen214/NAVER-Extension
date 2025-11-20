@@ -8,6 +8,9 @@ export const ExtensionProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentView, setCurrentView] = useState("menu");
 
+  const [selectedSources, setSelectedSources] = useState([]);
+  const [selectedText, setSelectedText] = useState("");
+
   // Data Flow
   const [availableSources, setAvailableSources] = useState([]); // List source từ API về
   const [selectedSourceIds, setSelectedSourceIds] = useState([]); // User chọn cái nào
@@ -106,6 +109,11 @@ export const ExtensionProvider = ({ children }) => {
         toggleSource,
         verifyPageContent,
         verifyResult,
+
+        selectedSources,
+        setSelectedSources,
+        selectedText,
+        setSelectedText,
       }}
     >
       {children}

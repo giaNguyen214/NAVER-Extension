@@ -34,6 +34,17 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [showCard, setShowCard] = useState(true);
 
+  const handleTurnOff = () => {
+    chrome.storage.local.set({ naverExtensionDisabled: true });
+
+    const rootElement = document.getElementById("naver-extension-root");
+    if (rootElement) {
+      rootElement.remove(); // Xóa extension khỏi trang
+    } else {
+      window.location.reload(); // Fallback
+    }
+  };
+
   return (
     <ExtensionProvider>
       {/* Bọc toàn bộ App trong Provider để chia sẻ state */}
@@ -117,11 +128,11 @@ function App() {
         {/* Dialog Overlay */}
         {isOpen && (
           <div
-            className="fixed inset-0 bg-transparent z-[2147483646] flex items-center justify-center p-4 animate-fade-in"
-            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 bg-transparent z-[2147483646] flex items-center justify-center p-4 animate-fade-in pointer-events-none"
+            // onClick={() => setIsOpen(false)}
           >
             <div
-              className="w-full max-w-sm !rounded-xl shadow-2xl relative animate-slide-up max-h-[90vh] overflow-visible"
+              className="w-full max-w-sm !rounded-xl shadow-2xl relative animate-slide-up max-h-[90vh] overflow-visible pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="w-full">
@@ -145,7 +156,31 @@ function App() {
                   }}
                   whileTap={{ cursor: "grabbing" }} // ⭐ khi đang kéo
                 >
-                  <MainContent />
+                  <div className="relative w-full h-full">
+                    {/* Nút X */}
+                    <button
+                      onClick={() => setIsOpen(false)}
+                      className="
+                        absolute 
+                        top-3 left-3
+
+                        bg-white 
+                        text-black 
+                        rounded-full 
+                        w-7 
+                        h-7 
+                        flex 
+                        items-center justify-center 
+                        shadow-lg 
+                        hover:bg-gray-300 
+                        z-50
+                        cursor-pointer"
+                    >
+                      ✕
+                    </button>
+
+                    <MainContent />
+                  </div>
                 </motion.div>
               </div>
             </div>

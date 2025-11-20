@@ -46,7 +46,7 @@ export default function Dashboard() {
                 <FactCheckIcon fontSize="large" className="text-blue-500" />
               }
               label="Verify Page"
-              onClick={() => navigate("verify")}
+              onClick={() => navigate("source")}
             />
             <MenuBtn
               icon={
