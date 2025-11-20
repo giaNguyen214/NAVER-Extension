@@ -5,16 +5,17 @@ import { resolve } from "path";
 export default defineConfig({
   plugins: [react()],
   build: {
-    // Tắt folder dist mỗi lần build để tránh file rác
     emptyOutDir: true,
     outDir: "dist",
     rollupOptions: {
       input: {
-        // Input là file JSX, KHÔNG PHẢI HTML
+        // 1. File content script (logic giao diện trên web)
         content: resolve(__dirname, "src/content/main.jsx"),
+
+        // 2. THÊM DÒNG NÀY: File background (logic chạy ngầm để bắt sự kiện click icon)
+        background: resolve(__dirname, "src/background.js"),
       },
       output: {
-        // Đặt tên cố định để manifest.json trỏ tới đúng chỗ
         entryFileNames: "assets/[name].js",
         chunkFileNames: "assets/[name].js",
         assetFileNames: "assets/[name].[ext]",

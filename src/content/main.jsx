@@ -1,20 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "../App";
-
-// 1. Import CSS dưới dạng chuỗi text (Vite feature)
 import tailwindStyles from "../index.css?inline";
-
-// 2. Import các thứ cần thiết cho MUI trong Shadow DOM
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
 const rootId = "naver-extension-root";
 
-if (!document.getElementById(rootId)) {
+// 1. Hàm khởi tạo App (Mount)
+function mountApp() {
+  // Nếu đã tồn tại thì không tạo lại
+  if (document.getElementById(rootId)) return;
+
   const rootElement = document.createElement("div");
   rootElement.id = rootId;
-  // Style cho container gốc nằm đè lên trang web (z-index cao)
+
+  // Style cố định
   rootElement.style.position = "fixed";
   rootElement.style.zIndex = "2147483647";
   rootElement.style.top = "0";
@@ -22,21 +23,17 @@ if (!document.getElementById(rootId)) {
 
   document.body.appendChild(rootElement);
 
-  // Tạo Shadow DOM mode open
+  // Shadow DOM Setup
   const shadowRoot = rootElement.attachShadow({ mode: "open" });
-
-  // 3. Tạo điểm neo để MUI chèn style vào đây (thay vì chèn vào head của web)
   const muiStyleContainer = document.createElement("style");
   shadowRoot.appendChild(muiStyleContainer);
 
-  // 4. Tạo cache của Emotion trỏ vào điểm neo đó
   const cache = createCache({
     key: "mui-css",
     prepend: true,
     container: muiStyleContainer,
   });
 
-  // 5. Chèn Tailwind CSS thủ công vào Shadow DOM
   const tailwindStyleTag = document.createElement("style");
   tailwindStyleTag.textContent = tailwindStyles;
   shadowRoot.appendChild(tailwindStyleTag);
@@ -45,10 +42,27 @@ if (!document.getElementById(rootId)) {
 
   root.render(
     <React.StrictMode>
-      {/* Bọc App trong CacheProvider */}
       <CacheProvider value={cache}>
         <App />
       </CacheProvider>
     </React.StrictMode>
   );
 }
+
+// 2. Chạy hàm mount lần đầu khi load trang
+mountApp();
+
+// 3. Lắng nghe sự kiện từ Background (khi bấm Icon)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "TOGGLE_EXTENSION") {
+    const existingRoot = document.getElementById(rootId);
+
+    if (existingRoot) {
+      // Nếu đang hiện -> Thì thôi (hoặc thích thì toggle tắt đi)
+      console.log("Extension đang chạy.");
+    } else {
+      // Nếu đã bị tắt -> Bật lại
+      mountApp();
+    }
+  }
+});
