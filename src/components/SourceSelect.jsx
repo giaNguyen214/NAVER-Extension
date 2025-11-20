@@ -42,17 +42,94 @@ export default function SourceSelect() {
   };
 
   const handleBack = () => navigate("menu");
-  const handleContinue = () => navigate("verify"); // bước 5 sẽ sửa theo bước 4
+
+  // --- MOCK API FUNCTION ---
+  const mockVerifyText = (text, sourceIds) => {
+    return new Promise((resolve) => {
+      console.log("Đang gửi API...", { text, sourceIds });
+
+      setTimeout(() => {
+        // Giả lập kết quả trả về từ Server
+        const mockResult = {
+          status: "conflict", // 'verified', 'conflict', 'unknown'
+          confidence_score: 0.88,
+          summary: "Phát hiện mâu thuẫn giữa nội dung bôi đen và tài liệu gốc.",
+          details: [
+            {
+              source: "article_1.pdf",
+              quote: "Doanh thu quý 1 tăng 20% so với cùng kỳ.",
+              analysis:
+                "Nội dung bạn chọn nói là 'giảm 10%', trái ngược với tài liệu.",
+              type: "danger", // Dùng để tô màu đỏ
+            },
+            {
+              source: "report_final.docx",
+              quote: "Kế hoạch mở rộng bị hoãn lại.",
+              analysis: "Khớp với thông tin trong báo cáo.",
+              type: "success", // Dùng để tô màu xanh
+            },
+          ],
+        };
+        resolve(mockResult);
+      }, 2000); // Giả lập delay 2s
+    });
+  };
+
+  const handleContinue = async () => {
+    // 1. Lấy nội dung text đang được bôi đen trên trình duyệt
+    const text = window.getSelection().toString().trim();
+
+    // Validation: Nếu chưa bôi đen thì cảnh báo
+    if (!text) {
+      alert("Vui lòng bôi đen đoạn văn bản cần kiểm tra trên trang web!");
+      return;
+    }
+
+    console.log("Text đã chọn:", text);
+    console.log("Sources đã chọn:", selectedSources);
+
+    // 2. Gửi API
+    try {
+      // const response = await fetch("https://api-cua-ban.com/verify", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     selected_text: text, // Text lấy từ màn hình
+      //     source_ids: selectedSources, // Mảng các file bạn đã chọn từ state
+      //   }),
+      // });
+      // const data = await response.json();
+      const data = await mockVerifyText(selectedText, selectedSources);
+
+      // 3. Xử lý kết quả và chuyển trang
+      console.log("Kết quả API:", data);
+
+      // Nếu bạn muốn truyền kết quả này sang trang "verify"
+      // Bạn cần sửa navigate để nhận state (nếu router hỗ trợ) hoặc lưu vào Context
+      // Ví dụ lưu vào context trước khi chuyển trang:
+      // setVerificationResult(data);
+
+      navigate("verify");
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+      alert("Có lỗi xảy ra khi gửi dữ liệu.");
+    }
+  };
 
   return (
-    <div className="w-full mx-auto overflow-hidden rounded-[25px]">
+    <div
+      onMouseDown={(e) => e.preventDefault()}
+      className="w-full mx-auto overflow-hidden rounded-[25px]"
+    >
       {/* Glassmorphism wrapper */}
       <div
         className="
         rounded-[25px]
         p-6
         border border-white/20
-        bg-white/5
+        bg-slate-900/20
         backdrop-blur-xl
         shadow-xl
         text-white
@@ -61,14 +138,14 @@ export default function SourceSelect() {
         {/* Title */}
         <Typography
           variant="h6"
-          className="text-3xl font-bold tracking-tight text-center w-full [-webkit-text-stroke:0.5px_rgba(0,0,0,0.9)]"
+          className="text-3xl font-bold tracking-tight text-center w-full"
           /* Tăng size chữ lên 4xl */
         >
           Select Sources
           {/* Đã chuyển sang tiếng Anh */}
         </Typography>
 
-        <p className="text-sm font-bold opacity-80 mt-1 w-full text-center [-webkit-text-stroke:1px_rgba(0,0,0,0.9)]">
+        <p className="text-sm font-bold mt-1 w-full text-center">
           {/* Tăng size chữ lên lg */}
           Select the documents you want to use to verify the text.
           {/* Đã chuyển sang tiếng Anh */}
@@ -162,6 +239,25 @@ export default function SourceSelect() {
                 onDelete={() => removeChip(src)}
                 size="medium" /* Tăng kích thước chip */
                 className={`${color} !font-bold !text-sm`} /* Thêm font bold và text-sm để chip không quá to */
+                sx={{
+                  // Vô hiệu hóa hiệu ứng nhích xuống khi nhấn giữ (active state)
+                  "&:active": {
+                    // Loại bỏ transform hoặc box-shadow thay đổi vị trí
+                    transform: "none !important",
+                    boxShadow: "none !important",
+                  },
+                  // Đảm bảo trạng thái focus cũng không gây nhích
+                  "&:focus": {
+                    transform: "none !important",
+                  },
+                  // Đôi khi cần đặt box-shadow về trạng thái bình thường khi hover/focus
+                  "&.MuiChip-clickable:hover": {
+                    boxShadow: "none !important",
+                  },
+                  "&.MuiChip-clickable:focusVisible": {
+                    boxShadow: "none !important",
+                  },
+                }}
               />
             );
           })}
