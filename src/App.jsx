@@ -154,9 +154,10 @@ const AnalysisCard = ({ type, title, summary, details, onDelete }) => {
 
 function AppInner() {
   const [isOpen, setIsOpen] = useState(false);
-  const [showResultPanel, setShowResultPanel] = useState(false);
+  // const [showResultPanel, setShowResultPanel] = useState(false);
 
-  const { analysisLogs, setAnalysisLogs } = useExtension();
+  const { analysisLogs, setAnalysisLogs, showResultPanel, setShowResultPanel } =
+    useExtension();
 
   return (
     <div className="font-sans text-gray-900">
@@ -266,7 +267,7 @@ function AppInner() {
                           flex 
                           items-center justify-center 
                           shadow-lg 
-                          hover:bg-gray-300 
+                          hover:bg-red-500 
                           z-50
                           cursor-pointer"
                     >
@@ -287,7 +288,7 @@ function AppInner() {
                           transition-colors duration-200
                           ${
                             showResultPanel
-                              ? "bg-blue-600 text-white"
+                              ? "bg-blue-400 text-white"
                               : "bg-white text-black hover:bg-gray-200"
                           }
                         `}

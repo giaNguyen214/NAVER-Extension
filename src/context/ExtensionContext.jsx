@@ -13,6 +13,8 @@ export const ExtensionProvider = ({ children }) => {
 
   const [analysisLogs, setAnalysisLogs] = useState([]);
 
+  const [showResultPanel, setShowResultPanel] = useState(false);
+
   // Data Flow
   const [availableSources, setAvailableSources] = useState([]); // List source từ API về
   const [selectedSourceIds, setSelectedSourceIds] = useState([]); // User chọn cái nào
@@ -119,6 +121,9 @@ export const ExtensionProvider = ({ children }) => {
 
         analysisLogs,
         setAnalysisLogs,
+
+        showResultPanel,
+        setShowResultPanel,
       }}
     >
       {children}

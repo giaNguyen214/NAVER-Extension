@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Typography, Chip, Box } from "@mui/material";
 import { useExtension } from "../context/ExtensionContext";
 
+import GlassAlert from "./GlassAlert";
+
 // TODO: sau này thay bằng list file thật từ server / storage
 const AVAILABLE_SOURCES = [
   "article_1.pdf",
@@ -33,7 +35,15 @@ export default function SourceSelect() {
     navigate,
     setAnalysisLogs,
     selectedText,
+    setShowResultPanel,
   } = useExtension();
+
+  const [alertMessage, setAlertMessage] = React.useState(null);
+  const [isProcessing, setIsProcessing] = React.useState(false);
+
+  const showGlassAlert = (msg) => {
+    setAlertMessage(msg);
+  };
 
   const toggleSource = (fileName) => {
     if (selectedSources.includes(fileName)) {
@@ -112,13 +122,14 @@ export default function SourceSelect() {
 
     // Validation: Nếu chưa bôi đen thì cảnh báo
     if (!text) {
-      alert("Vui lòng bôi đen đoạn văn bản cần kiểm tra trên trang web!");
+      showGlassAlert("Please select the text you want to verify.");
       return;
     }
 
     console.log("Text đã chọn:", text);
     console.log("Sources đã chọn:", selectedSources);
 
+    setIsProcessing(true);
     // 2. Gửi API
     try {
       // const response = await fetch("https://api-cua-ban.com/verify", {
@@ -138,6 +149,7 @@ export default function SourceSelect() {
       console.log("Kết quả API:", data);
 
       setAnalysisLogs((prev) => [...(data.logs || data), ...prev]);
+      setShowResultPanel(true);
 
       // Nếu bạn muốn truyền kết quả này sang trang "verify"
       // Bạn cần sửa navigate để nhận state (nếu router hỗ trợ) hoặc lưu vào Context
@@ -147,8 +159,9 @@ export default function SourceSelect() {
       // navigate("verify");
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
-      alert("Có lỗi xảy ra khi gửi dữ liệu.");
+      showGlassAlert("An error occurred while sending the data.");
     }
+    setIsProcessing(false);
   };
 
   return (
@@ -161,36 +174,46 @@ export default function SourceSelect() {
         className="
         rounded-[25px]
         p-6
-        border border-white/20
-        bg-slate-900/20
+        bg-white/30
+        border border-white/40
+        shadow-2xl
         backdrop-blur-xl
-        shadow-xl
-        text-white
+        text-black
       "
       >
         {/* Title */}
         <Typography
           variant="h6"
-          className="text-3xl font-bold tracking-tight text-center w-full"
-          /* Tăng size chữ lên 4xl */
+          className="
+            text-center
+            [text-shadow:
+              0_1px_2px_rgba(0,0,0,0.35),
+              0_4px_8px_rgba(0,0,0,0.25)
+            ]
+          "
         >
           Select Sources
-          {/* Đã chuyển sang tiếng Anh */}
         </Typography>
 
-        <p className="text-sm font-bold mt-1 w-full text-center">
-          {/* Tăng size chữ lên lg */}
+        <p
+          className="
+            [text-shadow:
+              0_1px_1px_rgba(0,0,0,0.28),
+              0_3px_6px_rgba(0,0,0,0.22)
+            ]
+          "
+        >
           Select the documents you want to use to verify the text.
-          {/* Đã chuyển sang tiếng Anh */}
         </p>
 
         {/* Checkbox list */}
         <Box
           className="
           mt-4 
-          rounded-2xl 
-          bg-black/5 /* Nền đen NHẸ cho vùng checkbox */
-          border border-white/10
+          rounded-2xl
+          backdrop-blur-lg 
+          bg-white/40 /* Nền đen NHẸ cho vùng checkbox */
+          border border-white/50
           max-h-64 /* Tăng chiều cao để chứa nhiều mục hơn */
           overflow-y-auto 
           px-3 py-2 
@@ -217,7 +240,7 @@ export default function SourceSelect() {
           {AVAILABLE_SOURCES.map((file) => (
             <label
               key={file}
-              className="flex items-center gap-2 text-sm font-bold cursor-pointer select-none"
+              className="flex items-center gap-2 text-sm cursor-pointer select-none"
               /* Tăng size chữ lên lg */
             >
               <input
@@ -226,7 +249,11 @@ export default function SourceSelect() {
                 checked={selectedSources.includes(file)}
                 onChange={() => toggleSource(file)}
               />
-              <span className="truncate [-webkit-text-stroke:0.4px_rgba(0,0,0,0.9)]">
+              <span
+                className="
+                  truncate
+                "
+              >
                 {file}
               </span>
             </label>
@@ -236,10 +263,16 @@ export default function SourceSelect() {
         {/* Chips */}
         <div className="mt-4 flex flex-wrap gap-2 min-h-[40px] items-start">
           {selectedSources.length === 0 && (
-            <span className="text-sm font-bold opacity-60 italic [-webkit-text-stroke:0.6px_rgba(0,0,0,0.9)]">
-              {/* Tăng size chữ lên lg */}
+            <span
+              className="
+                text-sm  italic opacity-70
+                [text-shadow:
+                  0_0_3px_rgba(0,0,0,1),
+                  0_0_8px_rgba(0,0,0,0.7)
+                ]
+              "
+            >
               No sources selected.
-              {/* Đã chuyển sang tiếng Anh */}
             </span>
           )}
 
@@ -301,24 +334,38 @@ export default function SourceSelect() {
           <Button
             variant="text"
             onClick={handleBack}
-            className="!text-white !normal-case font-bold text-xl [-webkit-text-stroke:0.6px_rgba(0,0,0,0.9)]"
-            /* Tăng size chữ lên xl */
+            className="
+ font-bold
+  [text-shadow:
+    0_1px_2px_rgba(0,0,0,0.35),
+    0_3px_6px_rgba(0,0,0,0.25)
+  ]
+"
           >
             ⟵ Back
-            {/* Đã chuyển sang tiếng Anh */}
           </Button>
 
           <Button
             variant="contained"
             disabled={selectedSources.length === 0}
             onClick={handleContinue}
-            className="!bg-blue-500 hover:!bg-blue-600 !normal-case !font-bold text-xl"
-            /* Tăng size chữ lên xl */
+            className="
+              !bg-blue-500 hover:!bg-blue-600
+              !normal-case  text-xl !text-white
+              [text-shadow:
+                0_1px_2px_rgba(0,0,0,0.40)
+              ]
+            "
           >
-            Continue
-            {/* Đã chuyển sang tiếng Anh */}
+            {isProcessing ? "processing..." : "Continue"}
           </Button>
         </div>
+        {alertMessage && (
+          <GlassAlert
+            message={alertMessage}
+            onClose={() => setAlertMessage(null)}
+          />
+        )}
       </div>
     </div>
   );
