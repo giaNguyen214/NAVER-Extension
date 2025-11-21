@@ -116,52 +116,40 @@ export default function SourceSelect() {
     });
   };
 
-  const handleContinue = async () => {
-    // 1. Lấy nội dung text đang được bôi đen trên trình duyệt
+  const runVerify = async (text) => {
+    setIsProcessing(true);
+    try {
+      const data = await mockVerifyText(selectedText, selectedSources);
+      setAnalysisLogs((prev) => [...(data.logs || data), ...prev]);
+      setShowResultPanel(true);
+    } catch (error) {
+      alert("An error occurred while sending the data.");
+    }
+    setIsProcessing(false);
+  };
+
+  const handleContinue = () => {
     const text = window.getSelection().toString().trim();
 
-    // Validation: Nếu chưa bôi đen thì cảnh báo
-    if (!text) {
-      showGlassAlert("Please select the text you want to verify.");
+    // console.log("selectedSources.length", selectedSources.length);
+
+    if (!text && selectedSources.length === 0) {
+      alert("Please select text and at least one source.");
       return;
     }
 
-    console.log("Text đã chọn:", text);
-    console.log("Sources đã chọn:", selectedSources);
-
-    setIsProcessing(true);
-    // 2. Gửi API
-    try {
-      // const response = await fetch("https://api-cua-ban.com/verify", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     selected_text: text, // Text lấy từ màn hình
-      //     source_ids: selectedSources, // Mảng các file bạn đã chọn từ state
-      //   }),
-      // });
-      // const data = await response.json();
-      const data = await mockVerifyText(selectedText, selectedSources);
-
-      // 3. Xử lý kết quả và chuyển trang
-      console.log("Kết quả API:", data);
-
-      setAnalysisLogs((prev) => [...(data.logs || data), ...prev]);
-      setShowResultPanel(true);
-
-      // Nếu bạn muốn truyền kết quả này sang trang "verify"
-      // Bạn cần sửa navigate để nhận state (nếu router hỗ trợ) hoặc lưu vào Context
-      // Ví dụ lưu vào context trước khi chuyển trang:
-      // setVerificationResult(data);
-
-      // navigate("verify");
-    } catch (error) {
-      console.error("Lỗi khi gọi API:", error);
-      showGlassAlert("An error occurred while sending the data.");
+    if (!text) {
+      // console.log("Please select the text you want to verify.");
+      alert("Please select the text you want to verify.");
+      return;
     }
-    setIsProcessing(false);
+
+    if (selectedSources.length === 0) {
+      alert("Please select at least one source.");
+      return;
+    }
+
+    runVerify(text);
   };
 
   return (
@@ -347,7 +335,7 @@ export default function SourceSelect() {
 
           <Button
             variant="contained"
-            disabled={selectedSources.length === 0}
+            // disabled={selectedSources.length === 0}
             onClick={handleContinue}
             className="
               !bg-blue-500 hover:!bg-blue-600
@@ -360,12 +348,6 @@ export default function SourceSelect() {
             {isProcessing ? "processing..." : "Continue"}
           </Button>
         </div>
-        {alertMessage && (
-          <GlassAlert
-            message={alertMessage}
-            onClose={() => setAlertMessage(null)}
-          />
-        )}
       </div>
     </div>
   );
