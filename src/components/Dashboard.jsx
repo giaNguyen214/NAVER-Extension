@@ -40,7 +40,7 @@ export default function Dashboard() {
           </Typography>
 
           {/* Menu Chính */}
-          <div className="grid grid-cols-2 gap-3 w-full">
+          <div className="grid grid-cols-1 gap-3 w-full">
             <MenuBtn
               icon={
                 <FactCheckIcon fontSize="large" className="text-blue-500" />
@@ -48,13 +48,13 @@ export default function Dashboard() {
               label="Verify Page"
               onClick={() => navigate("source")}
             />
-            <MenuBtn
+            {/* <MenuBtn
               icon={
                 <SummarizeIcon fontSize="large" className="text-purple-500" />
               }
               label="Summarize"
               onClick={() => navigate("summarize")}
-            />
+            /> */}
           </div>
 
           <Divider className="!my-1" />
